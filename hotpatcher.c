@@ -34,17 +34,12 @@ static size_t nr_callers;
 
 unsigned long hpatch_function_addr;   // new function address
 
-extern void mcount(void);             // gcc defined
+extern void __fentry__(void);             // gcc defined
 extern unsigned long find_dl_func(const char *lib, const char *func);
 extern const char *my_exe_path(void);
 extern int make_text_writable(unsigned long ip);
 extern void hpatch_caller(void);
-
-int hello(int user)
-{
-	printf("hello %d\n", user);
-	return 666;
-}
+extern int hello(int user);
 
 static int caller_cmp(const struct caller *a, const struct caller *b)
 {
@@ -84,9 +79,16 @@ static unsigned long find_mcount_call(unsigned long entry_addr)
 		if (code == NULL)
 			break;
 
-		if ((int)((unsigned long)mcount - addr - INSN_SIZE) ==
-		    code->offset)
+        printf("__fentry__ addr = %lu\n", (unsigned long)__fentry__);
+        printf("start = %lu\n", start);
+        printf("addr = %lu\n", addr);
+        printf("code->offset = %lu\n", code->offset);
+
+		if ((int)((unsigned long)__fentry__ - addr - INSN_SIZE) ==
+		    code->offset) {
+            printf("found __fentry__\n");
 			return addr;
+        }
 
 		start = addr + 1;
 	}
