@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <assert.h>
 
+void hdebug(const char *msg);
+
 /* a type safe version of bsearch() */
 #define xbsearch(key, base, nmemb, compar)				\
 ({									\

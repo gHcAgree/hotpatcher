@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/mman.h>    // mprotect
@@ -5,6 +6,11 @@
 #include "hotpatcher.h"
 
 #define PATH_MAX 256
+
+void hdebug(const char *msg)
+{
+    fprintf(stdout, "%s\n", msg);
+}
 
 const char *my_exe_path(void)
 {
