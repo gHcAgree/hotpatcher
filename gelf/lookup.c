@@ -117,13 +117,13 @@ struct lookup_table *lookup_open(char *path)
 		if (!gelf_getsym(data, i, &sym))
 			ERROR("gelf_getsym");
 
-		if (sym.st_shndx == SHN_UNDEF) {
+		// if (sym.st_shndx == SHN_UNDEF) {
 			
-			printf("skipped symbol: %s\n", elf_strptr(elf, sh.sh_link, sym.st_name));
+		// 	printf("skipped symbol: %s\n", elf_strptr(elf, sh.sh_link, sym.st_name));
 
-			mysym->skip = 1;
-			continue;
-		}
+		// 	mysym->skip = 1;
+		// 	continue;
+		// }
 
 		name = elf_strptr(elf, sh.sh_link, sym.st_name);
 		if(!name)

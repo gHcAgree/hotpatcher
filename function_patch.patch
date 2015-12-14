@@ -1,0 +1,14 @@
+diff --git a/sample_functions.c b/sample_functions.c
+index a7be92c..84f181d 100644
+--- a/sample_functions.c
++++ b/sample_functions.c
+@@ -8,7 +8,7 @@ int hello(int user)
+     sprintf(buf, "%s%d", "goodbye ", user);
+ 	hdebug(buf);
+ 
+-    printf("CHANGED\n");
++    printf("CHANGED 233333333333333333333\n");
+ 
+-	return 111;
++	return 233;
+ }

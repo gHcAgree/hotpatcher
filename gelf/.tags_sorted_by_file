@@ -1,0 +1,445 @@
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+LDFLAGS	Makefile	/^LDFLAGS = -lelf$/;"	m
+OBJS	Makefile	/^OBJS = create-diff-object.o lookup.o insn\/insn.o insn\/inat.o$/;"	m
+SOURCES	Makefile	/^SOURCES = create-diff-object.c lookup.c insn\/insn.c insn\/inat.c$/;"	m
+TARGETS	Makefile	/^TARGETS = create-diff-object$/;"	m
+ALLOC_LINK	create-diff-object.c	246;"	d	file:
+CHANGED	create-diff-object.c	/^	CHANGED,$/;"	e	enum:status	file:
+DEBUG	create-diff-object.c	/^	DEBUG,$/;"	e	enum:loglevel	file:
+DIFF_FATAL	create-diff-object.c	57;"	d	file:
+ERROR	create-diff-object.c	54;"	d	file:
+NEW	create-diff-object.c	/^	NEW,$/;"	e	enum:status	file:
+NORMAL	create-diff-object.c	/^	NORMAL$/;"	e	enum:loglevel	file:
+SAME	create-diff-object.c	/^	SAME$/;"	e	enum:status	file:
+addend	create-diff-object.c	/^	int addend;$/;"	m	struct:rela	file:
+altinstructions_group_size	create-diff-object.c	/^int altinstructions_group_size(struct kpatch_elf *kelf, int offset)$/;"	f
+argp	create-diff-object.c	/^static struct argp argp = { options, parse_opt, args_doc, 0 };$/;"	v	typeref:struct:argp	file:
+args	create-diff-object.c	/^	char *args[4];$/;"	m	struct:arguments	file:
+args_doc	create-diff-object.c	/^static char args_doc[] = "original.o patched.o kernel-object output.o";$/;"	v	file:
+arguments	create-diff-object.c	/^struct arguments {$/;"	s	file:
+base	create-diff-object.c	/^			struct section *base;$/;"	m	struct:section::__anon4::__anon5	typeref:struct:section::__anon4::__anon5::section	file:
+bind	create-diff-object.c	/^	unsigned char bind, type;$/;"	m	struct:symbol	file:
+bug_table_group_size	create-diff-object.c	/^int bug_table_group_size(struct kpatch_elf *kelf, int offset)$/;"	f
+childobj	create-diff-object.c	/^char *childobj;$/;"	v
+create_section_pair	create-diff-object.c	/^struct section *create_section_pair(struct kpatch_elf *kelf, char *name,$/;"	f
+data	create-diff-object.c	/^	Elf_Data *data;$/;"	m	struct:section	file:
+debug	create-diff-object.c	/^	int debug;$/;"	m	struct:arguments	file:
+elf	create-diff-object.c	/^	Elf *elf;$/;"	m	struct:kpatch_elf	file:
+ex_table_group_size	create-diff-object.c	/^int ex_table_group_size(struct kpatch_elf *kelf, int offset)$/;"	f
+fd	create-diff-object.c	/^	int fd;$/;"	m	struct:kpatch_elf	file:
+find_section_by_index	create-diff-object.c	/^struct section *find_section_by_index(struct list_head *list, unsigned int index)$/;"	f
+find_section_by_name	create-diff-object.c	/^struct section *find_section_by_name(struct list_head *list, const char *name)$/;"	f
+find_symbol_by_index	create-diff-object.c	/^struct symbol *find_symbol_by_index(struct list_head *list, size_t index)$/;"	f
+find_symbol_by_name	create-diff-object.c	/^struct symbol *find_symbol_by_name(struct list_head *list, const char *name)$/;"	f
+fixup_group_size	create-diff-object.c	/^int fixup_group_size(struct kpatch_elf *kelf, int offset)$/;"	f
+group_size	create-diff-object.c	/^	int (*group_size)(struct kpatch_elf *kelf, int offset);$/;"	m	struct:special_section	file:
+grouped	create-diff-object.c	/^	int grouped;$/;"	m	struct:section	file:
+has_fentry_call	create-diff-object.c	/^	int has_fentry_call;$/;"	m	struct:symbol	file:
+ignore	create-diff-object.c	/^	int ignore;$/;"	m	struct:section	file:
+inc_printf	create-diff-object.c	1559;"	d	file:
+include	create-diff-object.c	/^		int include; \/* used in the patched elf *\/$/;"	m	union:symbol::__anon7	file:
+include	create-diff-object.c	/^	int include;$/;"	m	struct:section	file:
+index	create-diff-object.c	/^	int index;$/;"	m	struct:section	file:
+index	create-diff-object.c	/^	int index;$/;"	m	struct:symbol	file:
+is_bundleable	create-diff-object.c	/^int is_bundleable(struct symbol *sym)$/;"	f
+is_debug_section	create-diff-object.c	/^int is_debug_section(struct section *sec)$/;"	f
+is_file_sym	create-diff-object.c	/^int is_file_sym(struct symbol *sym)$/;"	f
+is_local_func_sym	create-diff-object.c	/^int is_local_func_sym(struct symbol *sym)$/;"	f
+is_local_sym	create-diff-object.c	/^int is_local_sym(struct symbol *sym)$/;"	f
+is_null_sym	create-diff-object.c	/^int is_null_sym(struct symbol *sym)$/;"	f
+is_rela_section	create-diff-object.c	/^int is_rela_section(struct section *sec)$/;"	f
+is_special_static	create-diff-object.c	/^static int is_special_static(struct symbol *sym)$/;"	f	file:
+is_text_section	create-diff-object.c	/^int is_text_section(struct section *sec)$/;"	f
+kpatch_build_strings_section_data	create-diff-object.c	/^void kpatch_build_strings_section_data(struct kpatch_elf *kelf)$/;"	f
+kpatch_check_fentry_calls	create-diff-object.c	/^static void kpatch_check_fentry_calls(struct kpatch_elf *kelf)$/;"	f	file:
+kpatch_check_program_headers	create-diff-object.c	/^void kpatch_check_program_headers(Elf *elf)$/;"	f
+kpatch_compare_correlated_elements	create-diff-object.c	/^void kpatch_compare_correlated_elements(struct kpatch_elf *kelf)$/;"	f
+kpatch_compare_correlated_nonrela_section	create-diff-object.c	/^void kpatch_compare_correlated_nonrela_section(struct section *sec)$/;"	f
+kpatch_compare_correlated_rela_section	create-diff-object.c	/^void kpatch_compare_correlated_rela_section(struct section *sec)$/;"	f
+kpatch_compare_correlated_section	create-diff-object.c	/^void kpatch_compare_correlated_section(struct section *sec)$/;"	f
+kpatch_compare_correlated_symbol	create-diff-object.c	/^void kpatch_compare_correlated_symbol(struct symbol *sym)$/;"	f
+kpatch_compare_elf_headers	create-diff-object.c	/^void kpatch_compare_elf_headers(Elf *elf1, Elf *elf2)$/;"	f
+kpatch_compare_sections	create-diff-object.c	/^void kpatch_compare_sections(struct list_head *seclist)$/;"	f
+kpatch_compare_symbols	create-diff-object.c	/^void kpatch_compare_symbols(struct list_head *symlist)$/;"	f
+kpatch_correlate_elfs	create-diff-object.c	/^void kpatch_correlate_elfs(struct kpatch_elf *kelf1, struct kpatch_elf *kelf2)$/;"	f
+kpatch_correlate_sections	create-diff-object.c	/^void kpatch_correlate_sections(struct list_head *seclist1, struct list_head *seclist2)$/;"	f
+kpatch_correlate_static_local_variables	create-diff-object.c	/^void kpatch_correlate_static_local_variables(struct kpatch_elf *base,$/;"	f
+kpatch_correlate_symbols	create-diff-object.c	/^void kpatch_correlate_symbols(struct list_head *symlist1, struct list_head *symlist2)$/;"	f
+kpatch_create_dynamic_rela_sections	create-diff-object.c	/^void kpatch_create_dynamic_rela_sections(struct kpatch_elf *kelf,$/;"	f
+kpatch_create_hooks_objname_rela	create-diff-object.c	/^void kpatch_create_hooks_objname_rela(struct kpatch_elf *kelf, char *objname)$/;"	f
+kpatch_create_mcount_sections	create-diff-object.c	/^void kpatch_create_mcount_sections(struct kpatch_elf *kelf)$/;"	f
+kpatch_create_patches_sections	create-diff-object.c	/^void kpatch_create_patches_sections(struct kpatch_elf *kelf,$/;"	f
+kpatch_create_rela_list	create-diff-object.c	/^void kpatch_create_rela_list(struct kpatch_elf *kelf, struct section *sec)$/;"	f
+kpatch_create_section_list	create-diff-object.c	/^void kpatch_create_section_list(struct kpatch_elf *kelf)$/;"	f
+kpatch_create_shstrtab	create-diff-object.c	/^void kpatch_create_shstrtab(struct kpatch_elf *kelf)$/;"	f
+kpatch_create_strings_elements	create-diff-object.c	/^void kpatch_create_strings_elements(struct kpatch_elf *kelf)$/;"	f
+kpatch_create_strtab	create-diff-object.c	/^void kpatch_create_strtab(struct kpatch_elf *kelf)$/;"	f
+kpatch_create_symbol_list	create-diff-object.c	/^void kpatch_create_symbol_list(struct kpatch_elf *kelf)$/;"	f
+kpatch_create_symtab	create-diff-object.c	/^void kpatch_create_symtab(struct kpatch_elf *kelf)$/;"	f
+kpatch_dump_kelf	create-diff-object.c	/^void kpatch_dump_kelf(struct kpatch_elf *kelf)$/;"	f
+kpatch_elf	create-diff-object.c	/^struct kpatch_elf {$/;"	s	file:
+kpatch_elf_free	create-diff-object.c	/^void kpatch_elf_free(struct kpatch_elf *kelf)$/;"	f
+kpatch_elf_open	create-diff-object.c	/^struct kpatch_elf *kpatch_elf_open(const char *name)$/;"	f
+kpatch_elf_teardown	create-diff-object.c	/^void kpatch_elf_teardown(struct kpatch_elf *kelf)$/;"	f
+kpatch_find_fentry_calls	create-diff-object.c	/^static void kpatch_find_fentry_calls(struct kpatch_elf *kelf)$/;"	f	file:
+kpatch_find_static_twin	create-diff-object.c	/^static struct symbol *kpatch_find_static_twin(struct section *sec,$/;"	f	file:
+kpatch_include_changed_functions	create-diff-object.c	/^int kpatch_include_changed_functions(struct kpatch_elf *kelf)$/;"	f
+kpatch_include_debug_sections	create-diff-object.c	/^void kpatch_include_debug_sections(struct kpatch_elf *kelf)$/;"	f
+kpatch_include_force_elements	create-diff-object.c	/^void kpatch_include_force_elements(struct kpatch_elf *kelf)$/;"	f
+kpatch_include_hook_elements	create-diff-object.c	/^int kpatch_include_hook_elements(struct kpatch_elf *kelf)$/;"	f
+kpatch_include_new_globals	create-diff-object.c	/^int kpatch_include_new_globals(struct kpatch_elf *kelf)$/;"	f
+kpatch_include_standard_elements	create-diff-object.c	/^void kpatch_include_standard_elements(struct kpatch_elf *kelf)$/;"	f
+kpatch_include_symbol	create-diff-object.c	/^void kpatch_include_symbol(struct symbol *sym, int recurselevel)$/;"	f
+kpatch_is_core_module_symbol	create-diff-object.c	/^static int kpatch_is_core_module_symbol(char *name)$/;"	f	file:
+kpatch_is_normal_static_local	create-diff-object.c	/^static int kpatch_is_normal_static_local(struct symbol *sym)$/;"	f	file:
+kpatch_mangled_strcmp	create-diff-object.c	/^static int kpatch_mangled_strcmp(char *s1, char *s2)$/;"	f	file:
+kpatch_mark_grouped_sections	create-diff-object.c	/^void kpatch_mark_grouped_sections(struct kpatch_elf *kelf)$/;"	f
+kpatch_mark_ignored_functions_same	create-diff-object.c	/^void kpatch_mark_ignored_functions_same(struct kpatch_elf *kelf)$/;"	f
+kpatch_mark_ignored_sections	create-diff-object.c	/^void kpatch_mark_ignored_sections(struct kpatch_elf *kelf)$/;"	f
+kpatch_mark_ignored_sections_same	create-diff-object.c	/^void kpatch_mark_ignored_sections_same(struct kpatch_elf *kelf)$/;"	f
+kpatch_migrate_included_elements	create-diff-object.c	/^void kpatch_migrate_included_elements(struct kpatch_elf *kelf, struct kpatch_elf **kelfout)$/;"	f
+kpatch_migrate_symbols	create-diff-object.c	/^void kpatch_migrate_symbols(struct list_head *src,$/;"	f
+kpatch_print_changes	create-diff-object.c	/^void kpatch_print_changes(struct kpatch_elf *kelf)$/;"	f
+kpatch_process_special_sections	create-diff-object.c	/^void kpatch_process_special_sections(struct kpatch_elf *kelf)$/;"	f
+kpatch_rebuild_rela_section_data	create-diff-object.c	/^void kpatch_rebuild_rela_section_data(struct section *sec)$/;"	f
+kpatch_regenerate_special_section	create-diff-object.c	/^void kpatch_regenerate_special_section(struct kpatch_elf *kelf,$/;"	f
+kpatch_reindex_elements	create-diff-object.c	/^void kpatch_reindex_elements(struct kpatch_elf *kelf)$/;"	f
+kpatch_rename_mangled_functions	create-diff-object.c	/^void kpatch_rename_mangled_functions(struct kpatch_elf *base,$/;"	f
+kpatch_reorder_symbols	create-diff-object.c	/^void kpatch_reorder_symbols(struct kpatch_elf *kelf)$/;"	f
+kpatch_replace_sections_syms	create-diff-object.c	/^void kpatch_replace_sections_syms(struct kpatch_elf *kelf)$/;"	f
+kpatch_section_function_name	create-diff-object.c	/^static char *kpatch_section_function_name(struct section *sec)$/;"	f	file:
+kpatch_strip_unneeded_syms	create-diff-object.c	/^void kpatch_strip_unneeded_syms(struct kpatch_elf *kelf,$/;"	f
+kpatch_verify_patchability	create-diff-object.c	/^void kpatch_verify_patchability(struct kpatch_elf *kelf)$/;"	f
+kpatch_warn_only_change	create-diff-object.c	/^static int kpatch_warn_only_change(struct section *sec)$/;"	f	file:
+kpatch_write_output_elf	create-diff-object.c	/^void kpatch_write_output_elf(struct kpatch_elf *kelf, Elf *elf, char *outfile)$/;"	f
+list	create-diff-object.c	/^	struct list_head list;$/;"	m	struct:rela	typeref:struct:rela::list_head	file:
+list	create-diff-object.c	/^	struct list_head list;$/;"	m	struct:section	typeref:struct:section::list_head	file:
+list	create-diff-object.c	/^	struct list_head list;$/;"	m	struct:string	typeref:struct:string::list_head	file:
+list	create-diff-object.c	/^	struct list_head list;$/;"	m	struct:symbol	typeref:struct:symbol::list_head	file:
+log	create-diff-object.c	66;"	d	file:
+log_debug	create-diff-object.c	63;"	d	file:
+log_normal	create-diff-object.c	64;"	d	file:
+loglevel	create-diff-object.c	/^enum loglevel {$/;"	g	file:
+loglevel	create-diff-object.c	/^static enum loglevel loglevel = NORMAL;$/;"	v	typeref:enum:loglevel	file:
+main	create-diff-object.c	/^int main(int argc, char *argv[])$/;"	f
+name	create-diff-object.c	/^	char *name;$/;"	m	struct:section	file:
+name	create-diff-object.c	/^	char *name;$/;"	m	struct:special_section	file:
+name	create-diff-object.c	/^	char *name;$/;"	m	struct:string	file:
+name	create-diff-object.c	/^	char *name;$/;"	m	struct:symbol	file:
+offset	create-diff-object.c	/^	int offset;$/;"	m	struct:rela	file:
+offset_of_string	create-diff-object.c	/^int offset_of_string(struct list_head *list, char *name)$/;"	f
+options	create-diff-object.c	/^static struct argp_option options[] = {$/;"	v	typeref:struct:argp_option	file:
+parainstructions_group_size	create-diff-object.c	/^int parainstructions_group_size(struct kpatch_elf *kelf, int offset)$/;"	f
+parse_opt	create-diff-object.c	/^static error_t parse_opt (int key, char *arg, struct argp_state *state)$/;"	f	file:
+print_strtab	create-diff-object.c	/^void print_strtab(char *buf, size_t size)$/;"	f
+rela	create-diff-object.c	/^			struct section *rela;$/;"	m	struct:section::__anon4::__anon6	typeref:struct:section::__anon4::__anon6::section	file:
+rela	create-diff-object.c	/^	GElf_Rela rela;$/;"	m	struct:rela	file:
+rela	create-diff-object.c	/^struct rela {$/;"	s	file:
+rela_equal	create-diff-object.c	/^int rela_equal(struct rela *rela1, struct rela *rela2)$/;"	f
+rela_insn	create-diff-object.c	/^void rela_insn(struct section *sec, struct rela *rela, struct insn *insn)$/;"	f
+relas	create-diff-object.c	/^			struct list_head relas;$/;"	m	struct:section::__anon4::__anon5	typeref:struct:section::__anon4::__anon5::list_head	file:
+sec	create-diff-object.c	/^	struct section *sec;$/;"	m	struct:symbol	typeref:struct:symbol::section	file:
+secsym	create-diff-object.c	/^			struct symbol *secsym, *sym;$/;"	m	struct:section::__anon4::__anon6	typeref:struct:section::__anon4::__anon6::symbol	file:
+section	create-diff-object.c	/^struct section {$/;"	s	file:
+sections	create-diff-object.c	/^	struct list_head sections;$/;"	m	struct:kpatch_elf	typeref:struct:kpatch_elf::list_head	file:
+sh	create-diff-object.c	/^	GElf_Shdr sh;$/;"	m	struct:section	file:
+should_keep_rela_group	create-diff-object.c	/^int should_keep_rela_group(struct section *sec, int start, int size)$/;"	f
+smp_locks_group_size	create-diff-object.c	/^int smp_locks_group_size(struct kpatch_elf *kelf, int offset)$/;"	f
+special_section	create-diff-object.c	/^struct special_section {$/;"	s	file:
+special_sections	create-diff-object.c	/^struct special_section special_sections[] = {$/;"	v	typeref:struct:special_section
+status	create-diff-object.c	/^	enum status status;$/;"	m	struct:section	typeref:enum:section::status	file:
+status	create-diff-object.c	/^	enum status status;$/;"	m	struct:symbol	typeref:enum:symbol::status	file:
+status	create-diff-object.c	/^enum status {$/;"	g	file:
+status_str	create-diff-object.c	/^char *status_str(enum status status)$/;"	f
+string	create-diff-object.c	/^	char *string;$/;"	m	struct:rela	file:
+string	create-diff-object.c	/^struct string {$/;"	s	file:
+strings	create-diff-object.c	/^	struct list_head strings;$/;"	m	struct:kpatch_elf	typeref:struct:kpatch_elf::list_head	file:
+strip	create-diff-object.c	/^		int strip; \/* used in the output elf *\/$/;"	m	union:symbol::__anon7	file:
+sym	create-diff-object.c	/^			struct symbol *secsym, *sym;$/;"	m	struct:section::__anon4::__anon6	typeref:struct:section::__anon4::__anon6::	file:
+sym	create-diff-object.c	/^	GElf_Sym sym;$/;"	m	struct:symbol	file:
+sym	create-diff-object.c	/^	struct symbol *sym;$/;"	m	struct:rela	typeref:struct:rela::symbol	file:
+symbol	create-diff-object.c	/^struct symbol {$/;"	s	file:
+symbols	create-diff-object.c	/^	struct list_head symbols;$/;"	m	struct:kpatch_elf	typeref:struct:kpatch_elf::list_head	file:
+twin	create-diff-object.c	/^	struct section *twin;$/;"	m	struct:section	typeref:struct:section::section	file:
+twin	create-diff-object.c	/^	struct symbol *twin;$/;"	m	struct:symbol	typeref:struct:symbol::symbol	file:
+type	create-diff-object.c	/^	unsigned char bind, type;$/;"	m	struct:symbol	file:
+type	create-diff-object.c	/^	unsigned int type;$/;"	m	struct:rela	file:
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+INAT_ESC_BITS	insn/asm/inat.h	71;"	d
+INAT_ESC_MASK	insn/asm/inat.h	73;"	d
+INAT_ESC_MAX	insn/asm/inat.h	72;"	d
+INAT_ESC_OFFS	insn/asm/inat.h	70;"	d
+INAT_FLAG_OFFS	insn/asm/inat.h	84;"	d
+INAT_FORCE64	insn/asm/inat.h	86;"	d
+INAT_GROUP_TABLE_SIZE	insn/asm/inat.h	31;"	d
+INAT_GRP_BITS	insn/asm/inat.h	76;"	d
+INAT_GRP_MASK	insn/asm/inat.h	78;"	d
+INAT_GRP_MAX	insn/asm/inat.h	77;"	d
+INAT_GRP_OFFS	insn/asm/inat.h	75;"	d
+INAT_IMM_BITS	insn/asm/inat.h	81;"	d
+INAT_IMM_BYTE	insn/asm/inat.h	56;"	d
+INAT_IMM_DWORD	insn/asm/inat.h	58;"	d
+INAT_IMM_MASK	insn/asm/inat.h	82;"	d
+INAT_IMM_OFFS	insn/asm/inat.h	80;"	d
+INAT_IMM_PTR	insn/asm/inat.h	60;"	d
+INAT_IMM_QWORD	insn/asm/inat.h	59;"	d
+INAT_IMM_VWORD	insn/asm/inat.h	62;"	d
+INAT_IMM_VWORD32	insn/asm/inat.h	61;"	d
+INAT_IMM_WORD	insn/asm/inat.h	57;"	d
+INAT_LGCPFX_MAX	insn/asm/inat.h	53;"	d
+INAT_LSTPFX_MAX	insn/asm/inat.h	52;"	d
+INAT_MAKE_ESCAPE	insn/asm/inat.h	94;"	d
+INAT_MAKE_GROUP	insn/asm/inat.h	95;"	d
+INAT_MAKE_IMM	insn/asm/inat.h	96;"	d
+INAT_MAKE_PREFIX	insn/asm/inat.h	93;"	d
+INAT_MODRM	insn/asm/inat.h	85;"	d
+INAT_MOFFSET	insn/asm/inat.h	88;"	d
+INAT_OPCODE_TABLE_SIZE	insn/asm/inat.h	30;"	d
+INAT_PFX_ADDRSZ	insn/asm/inat.h	45;"	d
+INAT_PFX_BITS	insn/asm/inat.h	66;"	d
+INAT_PFX_CS	insn/asm/inat.h	39;"	d
+INAT_PFX_DS	insn/asm/inat.h	40;"	d
+INAT_PFX_ES	insn/asm/inat.h	41;"	d
+INAT_PFX_FS	insn/asm/inat.h	42;"	d
+INAT_PFX_GS	insn/asm/inat.h	43;"	d
+INAT_PFX_LOCK	insn/asm/inat.h	38;"	d
+INAT_PFX_MASK	insn/asm/inat.h	68;"	d
+INAT_PFX_MAX	insn/asm/inat.h	67;"	d
+INAT_PFX_OFFS	insn/asm/inat.h	65;"	d
+INAT_PFX_OPNDSZ	insn/asm/inat.h	34;"	d
+INAT_PFX_REPE	insn/asm/inat.h	35;"	d
+INAT_PFX_REPNE	insn/asm/inat.h	36;"	d
+INAT_PFX_REX	insn/asm/inat.h	47;"	d
+INAT_PFX_SS	insn/asm/inat.h	44;"	d
+INAT_PFX_VEX2	insn/asm/inat.h	49;"	d
+INAT_PFX_VEX3	insn/asm/inat.h	50;"	d
+INAT_SCNDIMM	insn/asm/inat.h	87;"	d
+INAT_VARIANT	insn/asm/inat.h	89;"	d
+INAT_VEXOK	insn/asm/inat.h	90;"	d
+INAT_VEXONLY	insn/asm/inat.h	91;"	d
+_ASM_X86_INAT_H	insn/asm/inat.h	2;"	d
+inat_accept_vex	insn/asm/inat.h	/^static inline int inat_accept_vex(insn_attr_t attr)$/;"	f
+inat_escape_id	insn/asm/inat.h	/^static inline int inat_escape_id(insn_attr_t attr)$/;"	f
+inat_group_common_attribute	insn/asm/inat.h	/^static inline int inat_group_common_attribute(insn_attr_t attr)$/;"	f
+inat_group_id	insn/asm/inat.h	/^static inline int inat_group_id(insn_attr_t attr)$/;"	f
+inat_has_immediate	insn/asm/inat.h	/^static inline int inat_has_immediate(insn_attr_t attr)$/;"	f
+inat_has_modrm	insn/asm/inat.h	/^static inline int inat_has_modrm(insn_attr_t attr)$/;"	f
+inat_has_moffset	insn/asm/inat.h	/^static inline int inat_has_moffset(insn_attr_t attr)$/;"	f
+inat_has_second_immediate	insn/asm/inat.h	/^static inline int inat_has_second_immediate(insn_attr_t attr)$/;"	f
+inat_has_variant	insn/asm/inat.h	/^static inline int inat_has_variant(insn_attr_t attr)$/;"	f
+inat_immediate_size	insn/asm/inat.h	/^static inline int inat_immediate_size(insn_attr_t attr)$/;"	f
+inat_is_address_size_prefix	insn/asm/inat.h	/^static inline int inat_is_address_size_prefix(insn_attr_t attr)$/;"	f
+inat_is_escape	insn/asm/inat.h	/^static inline int inat_is_escape(insn_attr_t attr)$/;"	f
+inat_is_force64	insn/asm/inat.h	/^static inline int inat_is_force64(insn_attr_t attr)$/;"	f
+inat_is_group	insn/asm/inat.h	/^static inline int inat_is_group(insn_attr_t attr)$/;"	f
+inat_is_legacy_prefix	insn/asm/inat.h	/^static inline int inat_is_legacy_prefix(insn_attr_t attr)$/;"	f
+inat_is_operand_size_prefix	insn/asm/inat.h	/^static inline int inat_is_operand_size_prefix(insn_attr_t attr)$/;"	f
+inat_is_rex_prefix	insn/asm/inat.h	/^static inline int inat_is_rex_prefix(insn_attr_t attr)$/;"	f
+inat_is_vex3_prefix	insn/asm/inat.h	/^static inline int inat_is_vex3_prefix(insn_attr_t attr)$/;"	f
+inat_is_vex_prefix	insn/asm/inat.h	/^static inline int inat_is_vex_prefix(insn_attr_t attr)$/;"	f
+inat_last_prefix_id	insn/asm/inat.h	/^static inline int inat_last_prefix_id(insn_attr_t attr)$/;"	f
+inat_must_vex	insn/asm/inat.h	/^static inline int inat_must_vex(insn_attr_t attr)$/;"	f
+_ASM_X86_INAT_TYPES_H	insn/asm/inat_types.h	2;"	d
+insn_attr_t	insn/asm/inat_types.h	/^typedef unsigned int insn_attr_t;$/;"	t
+insn_byte_t	insn/asm/inat_types.h	/^typedef unsigned char insn_byte_t;$/;"	t
+insn_value_t	insn/asm/inat_types.h	/^typedef signed int insn_value_t;$/;"	t
+MAX_INSN_SIZE	insn/asm/insn.h	71;"	d
+X86_MODRM_MOD	insn/asm/insn.h	73;"	d
+X86_MODRM_REG	insn/asm/insn.h	74;"	d
+X86_MODRM_RM	insn/asm/insn.h	75;"	d
+X86_REX_B	insn/asm/insn.h	84;"	d
+X86_REX_R	insn/asm/insn.h	82;"	d
+X86_REX_W	insn/asm/insn.h	81;"	d
+X86_REX_X	insn/asm/insn.h	83;"	d
+X86_SIB_BASE	insn/asm/insn.h	79;"	d
+X86_SIB_INDEX	insn/asm/insn.h	78;"	d
+X86_SIB_SCALE	insn/asm/insn.h	77;"	d
+X86_VEX2_M	insn/asm/insn.h	94;"	d
+X86_VEX3_M	insn/asm/insn.h	93;"	d
+X86_VEX_B	insn/asm/insn.h	90;"	d
+X86_VEX_L	insn/asm/insn.h	91;"	d
+X86_VEX_M_MAX	insn/asm/insn.h	97;"	d
+X86_VEX_P	insn/asm/insn.h	96;"	d
+X86_VEX_R	insn/asm/insn.h	88;"	d
+X86_VEX_V	insn/asm/insn.h	95;"	d
+X86_VEX_W	insn/asm/insn.h	87;"	d
+X86_VEX_X	insn/asm/insn.h	89;"	d
+_ASM_X86_INSN_H	insn/asm/insn.h	2;"	d
+addr_bytes	insn/asm/insn.h	/^	unsigned char addr_bytes;$/;"	m	struct:insn
+attr	insn/asm/insn.h	/^	insn_attr_t attr;$/;"	m	struct:insn
+bytes	insn/asm/insn.h	/^		insn_byte_t bytes[4];$/;"	m	union:insn_field::__anon1
+displacement	insn/asm/insn.h	/^	struct insn_field displacement;$/;"	m	struct:insn	typeref:struct:insn::insn_field
+got	insn/asm/insn.h	/^	unsigned char got;$/;"	m	struct:insn_field
+immediate	insn/asm/insn.h	/^		struct insn_field immediate;$/;"	m	union:insn::__anon2	typeref:struct:insn::__anon2::insn_field
+immediate1	insn/asm/insn.h	/^		struct insn_field immediate1;	\/* for 64bit imm or off16\/32 *\/$/;"	m	union:insn::__anon2	typeref:struct:insn::__anon2::insn_field
+immediate2	insn/asm/insn.h	/^		struct insn_field immediate2;	\/* for 64bit imm or seg16 *\/$/;"	m	union:insn::__anon3	typeref:struct:insn::__anon3::insn_field
+insn	insn/asm/insn.h	/^struct insn {$/;"	s
+insn_complete	insn/asm/insn.h	/^static inline int insn_complete(struct insn *insn)$/;"	f
+insn_field	insn/asm/insn.h	/^struct insn_field {$/;"	s
+insn_get_attribute	insn/asm/insn.h	/^static inline void insn_get_attribute(struct insn *insn)$/;"	f
+insn_is_avx	insn/asm/insn.h	/^static inline int insn_is_avx(struct insn *insn)$/;"	f
+insn_last_prefix_id	insn/asm/insn.h	/^static inline int insn_last_prefix_id(struct insn *insn)$/;"	f
+insn_offset_displacement	insn/asm/insn.h	/^static inline int insn_offset_displacement(struct insn *insn)$/;"	f
+insn_offset_immediate	insn/asm/insn.h	/^static inline int insn_offset_immediate(struct insn *insn)$/;"	f
+insn_offset_modrm	insn/asm/insn.h	/^static inline int insn_offset_modrm(struct insn *insn)$/;"	f
+insn_offset_opcode	insn/asm/insn.h	/^static inline int insn_offset_opcode(struct insn *insn)$/;"	f
+insn_offset_rex_prefix	insn/asm/insn.h	/^static inline int insn_offset_rex_prefix(struct insn *insn)$/;"	f
+insn_offset_sib	insn/asm/insn.h	/^static inline int insn_offset_sib(struct insn *insn)$/;"	f
+insn_offset_vex_prefix	insn/asm/insn.h	/^static inline int insn_offset_vex_prefix(struct insn *insn)$/;"	f
+insn_vex_m_bits	insn/asm/insn.h	/^static inline insn_byte_t insn_vex_m_bits(struct insn *insn)$/;"	f
+insn_vex_p_bits	insn/asm/insn.h	/^static inline insn_byte_t insn_vex_p_bits(struct insn *insn)$/;"	f
+kaddr	insn/asm/insn.h	/^	const insn_byte_t *kaddr;	\/* kernel address of insn to analyze *\/$/;"	m	struct:insn
+kernel_insn_init	insn/asm/insn.h	/^static inline void kernel_insn_init(struct insn *insn, const void *kaddr)$/;"	f
+length	insn/asm/insn.h	/^	unsigned char length;$/;"	m	struct:insn
+modrm	insn/asm/insn.h	/^	struct insn_field modrm;$/;"	m	struct:insn	typeref:struct:insn::insn_field
+moffset1	insn/asm/insn.h	/^		struct insn_field moffset1;	\/* for 64bit MOV *\/$/;"	m	union:insn::__anon2	typeref:struct:insn::__anon2::insn_field
+moffset2	insn/asm/insn.h	/^		struct insn_field moffset2;	\/* for 64bit MOV *\/$/;"	m	union:insn::__anon3	typeref:struct:insn::__anon3::insn_field
+nbytes	insn/asm/insn.h	/^	unsigned char nbytes;$/;"	m	struct:insn_field
+next_byte	insn/asm/insn.h	/^	const insn_byte_t *next_byte;$/;"	m	struct:insn
+opcode	insn/asm/insn.h	/^	struct insn_field opcode;	\/*$/;"	m	struct:insn	typeref:struct:insn::insn_field
+opnd_bytes	insn/asm/insn.h	/^	unsigned char opnd_bytes;$/;"	m	struct:insn
+prefixes	insn/asm/insn.h	/^	struct insn_field prefixes;	\/*$/;"	m	struct:insn	typeref:struct:insn::insn_field
+rex_prefix	insn/asm/insn.h	/^	struct insn_field rex_prefix;	\/* REX prefix *\/$/;"	m	struct:insn	typeref:struct:insn::insn_field
+sib	insn/asm/insn.h	/^	struct insn_field sib;$/;"	m	struct:insn	typeref:struct:insn::insn_field
+value	insn/asm/insn.h	/^		insn_value_t value;$/;"	m	union:insn_field::__anon1
+vex_prefix	insn/asm/insn.h	/^	struct insn_field vex_prefix;	\/* VEX prefix *\/$/;"	m	struct:insn	typeref:struct:insn::insn_field
+x86_64	insn/asm/insn.h	/^	unsigned char x86_64;$/;"	m	struct:insn
+inat_avx_tables	insn/inat-tables.c	/^const insn_attr_t * const inat_avx_tables[X86_VEX_M_MAX + 1][INAT_LSTPFX_MAX + 1] = {$/;"	v
+inat_escape_table_1	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_1[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_1_1	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_1_1[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_1_2	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_1_2[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_1_3	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_1_3[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_2	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_2[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_2_1	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_2_1[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_2_2	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_2_2[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_2_3	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_2_3[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_3	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_3[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_3_1	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_3_1[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_table_3_3	insn/inat-tables.c	/^const insn_attr_t inat_escape_table_3_3[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_escape_tables	insn/inat-tables.c	/^const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1][INAT_LSTPFX_MAX + 1] = {$/;"	v
+inat_group_table_10	insn/inat-tables.c	/^const insn_attr_t inat_group_table_10[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_11	insn/inat-tables.c	/^const insn_attr_t inat_group_table_11[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_13	insn/inat-tables.c	/^const insn_attr_t inat_group_table_13[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_14	insn/inat-tables.c	/^const insn_attr_t inat_group_table_14[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_14_1	insn/inat-tables.c	/^const insn_attr_t inat_group_table_14_1[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_15	insn/inat-tables.c	/^const insn_attr_t inat_group_table_15[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_15_1	insn/inat-tables.c	/^const insn_attr_t inat_group_table_15_1[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_16	insn/inat-tables.c	/^const insn_attr_t inat_group_table_16[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_16_1	insn/inat-tables.c	/^const insn_attr_t inat_group_table_16_1[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_19	insn/inat-tables.c	/^const insn_attr_t inat_group_table_19[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_19_2	insn/inat-tables.c	/^const insn_attr_t inat_group_table_19_2[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_22	insn/inat-tables.c	/^const insn_attr_t inat_group_table_22[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_22_1	insn/inat-tables.c	/^const insn_attr_t inat_group_table_22_1[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_22_2	insn/inat-tables.c	/^const insn_attr_t inat_group_table_22_2[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_23	insn/inat-tables.c	/^const insn_attr_t inat_group_table_23[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_4	insn/inat-tables.c	/^const insn_attr_t inat_group_table_4[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_5	insn/inat-tables.c	/^const insn_attr_t inat_group_table_5[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_6	insn/inat-tables.c	/^const insn_attr_t inat_group_table_6[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_7	insn/inat-tables.c	/^const insn_attr_t inat_group_table_7[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_8	insn/inat-tables.c	/^const insn_attr_t inat_group_table_8[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_table_9	insn/inat-tables.c	/^const insn_attr_t inat_group_table_9[INAT_GROUP_TABLE_SIZE] = {$/;"	v
+inat_group_tables	insn/inat-tables.c	/^const insn_attr_t * const inat_group_tables[INAT_GRP_MAX + 1][INAT_LSTPFX_MAX + 1] = {$/;"	v
+inat_primary_table	insn/inat-tables.c	/^const insn_attr_t inat_primary_table[INAT_OPCODE_TABLE_SIZE] = {$/;"	v
+inat_get_avx_attribute	insn/inat.c	/^insn_attr_t inat_get_avx_attribute(insn_byte_t opcode, insn_byte_t vex_m,$/;"	f
+inat_get_escape_attribute	insn/inat.c	/^insn_attr_t inat_get_escape_attribute(insn_byte_t opcode, int lpfx_id,$/;"	f
+inat_get_group_attribute	insn/inat.c	/^insn_attr_t inat_get_group_attribute(insn_byte_t modrm, int lpfx_id,$/;"	f
+inat_get_last_prefix_id	insn/inat.c	/^int inat_get_last_prefix_id(insn_byte_t last_pfx)$/;"	f
+inat_get_opcode_attribute	insn/inat.c	/^insn_attr_t inat_get_opcode_attribute(insn_byte_t opcode)$/;"	f
+__get_immptr	insn/insn.c	/^static int __get_immptr(struct insn *insn)$/;"	f	file:
+__get_immv	insn/insn.c	/^static int __get_immv(struct insn *insn)$/;"	f	file:
+__get_immv32	insn/insn.c	/^static int __get_immv32(struct insn *insn)$/;"	f	file:
+__get_moffset	insn/insn.c	/^static int __get_moffset(struct insn *insn)$/;"	f	file:
+__get_next	insn/insn.c	35;"	d	file:
+__peek_nbyte_next	insn/insn.c	38;"	d	file:
+get_next	insn/insn.c	41;"	d	file:
+insn_get_displacement	insn/insn.c	/^void insn_get_displacement(struct insn *insn)$/;"	f
+insn_get_immediate	insn/insn.c	/^void insn_get_immediate(struct insn *insn)$/;"	f
+insn_get_length	insn/insn.c	/^void insn_get_length(struct insn *insn)$/;"	f
+insn_get_modrm	insn/insn.c	/^void insn_get_modrm(struct insn *insn)$/;"	f
+insn_get_opcode	insn/insn.c	/^void insn_get_opcode(struct insn *insn)$/;"	f
+insn_get_prefixes	insn/insn.c	/^void insn_get_prefixes(struct insn *insn)$/;"	f
+insn_get_sib	insn/insn.c	/^void insn_get_sib(struct insn *insn)$/;"	f
+insn_init	insn/insn.c	/^void insn_init(struct insn *insn, const void *kaddr, int x86_64)$/;"	f
+insn_rip_relative	insn/insn.c	/^int insn_rip_relative(struct insn *insn)$/;"	f
+peek_nbyte_next	insn/insn.c	44;"	d	file:
+peek_next	insn/insn.c	47;"	d	file:
+unlikely	insn/insn.c	29;"	d	file:
+validate_next	insn/insn.c	32;"	d	file:
+clean_cache	kpatch-build	/^clean_cache() {$/;"	f
+cleanup	kpatch-build	/^cleanup() {$/;"	f
+die	kpatch-build	/^die() {$/;"	f
+find_dirs	kpatch-build	/^find_dirs() {$/;"	f
+find_kobj	kpatch-build	/^find_kobj() {$/;"	f
+find_parent_obj	kpatch-build	/^find_parent_obj() {$/;"	f
+gcc_version_check	kpatch-build	/^gcc_version_check() {$/;"	f
+usage	kpatch-build	/^usage() {$/;"	f
+warn	kpatch-build	/^warn() {$/;"	f
+_KPATCH_PATCH_H_	kpatch-patch.h	23;"	d
+addend	kpatch-patch.h	/^	int addend;$/;"	m	struct:kpatch_patch_dynrela
+dest	kpatch-patch.h	/^	unsigned long dest;$/;"	m	struct:kpatch_patch_dynrela
+external	kpatch-patch.h	/^	int external;$/;"	m	struct:kpatch_patch_dynrela
+hook	kpatch-patch.h	/^	void (*hook)(void);$/;"	m	struct:kpatch_patch_hook
+kpatch_patch_dynrela	kpatch-patch.h	/^struct kpatch_patch_dynrela {$/;"	s
+kpatch_patch_func	kpatch-patch.h	/^struct kpatch_patch_func {$/;"	s
+kpatch_patch_hook	kpatch-patch.h	/^struct kpatch_patch_hook {$/;"	s
+name	kpatch-patch.h	/^	char *name;$/;"	m	struct:kpatch_patch_dynrela
+name	kpatch-patch.h	/^	char *name;$/;"	m	struct:kpatch_patch_func
+new_addr	kpatch-patch.h	/^	unsigned long new_addr;$/;"	m	struct:kpatch_patch_func
+new_size	kpatch-patch.h	/^	unsigned long new_size;$/;"	m	struct:kpatch_patch_func
+objname	kpatch-patch.h	/^	char *objname;$/;"	m	struct:kpatch_patch_dynrela
+objname	kpatch-patch.h	/^	char *objname;$/;"	m	struct:kpatch_patch_func
+objname	kpatch-patch.h	/^	char *objname;$/;"	m	struct:kpatch_patch_hook
+old_addr	kpatch-patch.h	/^	unsigned long old_addr;$/;"	m	struct:kpatch_patch_func
+old_size	kpatch-patch.h	/^	unsigned long old_size;$/;"	m	struct:kpatch_patch_func
+src	kpatch-patch.h	/^	unsigned long src;$/;"	m	struct:kpatch_patch_dynrela
+type	kpatch-patch.h	/^	unsigned long type;$/;"	m	struct:kpatch_patch_dynrela
+INIT_LIST_HEAD	list.h	72;"	d
+LIST_HEAD	list.h	69;"	d
+LIST_HEAD_INIT	list.h	67;"	d
+LIST_POISON1	list.h	51;"	d
+LIST_POISON2	list.h	52;"	d
+_LIST_H	list.h	28;"	d
+__list_add	list.h	/^static inline void __list_add(struct list_head *new,$/;"	f
+__list_del	list.h	/^static inline void __list_del(struct list_head * prev, struct list_head * next)$/;"	f
+container_of	list.h	42;"	d
+list_add	list.h	/^static inline void list_add(struct list_head *new, struct list_head *head)$/;"	f
+list_add_tail	list.h	/^static inline void list_add_tail(struct list_head *new, struct list_head *head)$/;"	f
+list_del	list.h	/^static inline void list_del(struct list_head *entry)$/;"	f
+list_entry	list.h	161;"	d
+list_first_entry	list.h	172;"	d
+list_for_each_entry	list.h	189;"	d
+list_for_each_entry_continue	list.h	203;"	d
+list_for_each_entry_safe	list.h	215;"	d
+list_head	list.h	/^struct list_head {$/;"	s
+list_next_entry	list.h	180;"	d
+list_replace	list.h	/^static inline void list_replace(struct list_head *old,$/;"	f
+next	list.h	/^	struct list_head *next, *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+offsetof	list.h	33;"	d
+prev	list.h	/^	struct list_head *next, *prev;$/;"	m	struct:list_head	typeref:struct:list_head::
+ERROR	lookup.c	37;"	d	file:
+bind	lookup.c	/^	int type, bind, skip;$/;"	m	struct:symbol	file:
+elf	lookup.c	/^	Elf *elf;$/;"	m	struct:lookup_table	file:
+fd	lookup.c	/^	int fd, nr;$/;"	m	struct:lookup_table	file:
+for_each_symbol	lookup.c	53;"	d	file:
+lookup_close	lookup.c	/^void lookup_close(struct lookup_table *table)$/;"	f
+lookup_global_symbol	lookup.c	/^int lookup_global_symbol(struct lookup_table *table, char *name,$/;"	f
+lookup_is_exported_symbol	lookup.c	/^int lookup_is_exported_symbol(struct lookup_table *table, char *name)$/;"	f
+lookup_local_symbol	lookup.c	/^int lookup_local_symbol(struct lookup_table *table, char *name, char *hint,$/;"	f
+lookup_open	lookup.c	/^struct lookup_table *lookup_open(char *path)$/;"	f
+lookup_table	lookup.c	/^struct lookup_table {$/;"	s	file:
+name	lookup.c	/^	char *name;$/;"	m	struct:symbol	file:
+nr	lookup.c	/^	int fd, nr;$/;"	m	struct:lookup_table	file:
+size	lookup.c	/^	unsigned long size;$/;"	m	struct:symbol	file:
+skip	lookup.c	/^	int type, bind, skip;$/;"	m	struct:symbol	file:
+symbol	lookup.c	/^struct symbol {$/;"	s	file:
+syms	lookup.c	/^	struct symbol *syms;$/;"	m	struct:lookup_table	typeref:struct:lookup_table::symbol	file:
+type	lookup.c	/^	int type, bind, skip;$/;"	m	struct:symbol	file:
+value	lookup.c	/^	unsigned long value;$/;"	m	struct:symbol	file:
+_LOOKUP_H_	lookup.h	2;"	d
+lookup_result	lookup.h	/^struct lookup_result {$/;"	s
+size	lookup.h	/^	unsigned long size;$/;"	m	struct:lookup_result
+value	lookup.h	/^	unsigned long value;$/;"	m	struct:lookup_result

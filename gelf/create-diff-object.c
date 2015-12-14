@@ -2746,6 +2746,9 @@ void kpatch_create_dynamic_rela_sections(struct kpatch_elf *kelf,
 				offsetof(struct kpatch_patch_dynrela, objname);
 
 			rela->sym->strip = 1;
+
+			printf("delete rela %s\n", rela->sym->name);
+
 			list_del(&rela->list);
 			free(rela);
 
@@ -3242,7 +3245,7 @@ int main(int argc, char *argv[])
 	/* create strings, patches, and dynrelas sections */
 	kpatch_create_strings_elements(kelf_out);
 	kpatch_create_patches_sections(kelf_out, lookup, hint, name);
-	kpatch_create_dynamic_rela_sections(kelf_out, lookup, hint, name);
+//	kpatch_create_dynamic_rela_sections(kelf_out, lookup, hint, name);
 	kpatch_create_hooks_objname_rela(kelf_out, name);
 	kpatch_build_strings_section_data(kelf_out);
 
@@ -3256,7 +3259,7 @@ int main(int argc, char *argv[])
 	 *  throughout the structure.
 	 */
 	kpatch_reorder_symbols(kelf_out);
-	kpatch_strip_unneeded_syms(kelf_out, lookup);
+//	kpatch_strip_unneeded_syms(kelf_out, lookup);
 	kpatch_reindex_elements(kelf_out);
 
 	/*

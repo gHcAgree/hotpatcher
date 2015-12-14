@@ -13,6 +13,7 @@
 #define FIND_MCOUNT_RANGE 32
 #define OPCODE_CALL       0xe8
 #define OPCODE_LEAVE      0xc9
+#define OPCODE_RET        0xc3
 
 union instruction {
 	unsigned char start[INSN_SIZE];
@@ -105,14 +106,14 @@ unsigned long find_hpatch_function()
 	return offset;
 }
 
-unsigned long find_leave_addr(unsigned long entry_addr)
+unsigned long find_ret_addr(unsigned long entry_addr)
 {
 	unsigned long start = entry_addr;
 
     union instruction *code;
     unsigned long addr;
 
-    code = rawmemchr((void *)start, OPCODE_LEAVE);
+    code = rawmemchr((void *)start, OPCODE_RET);
     addr = (unsigned long)code;
 
 
@@ -227,6 +228,8 @@ void do_hpatch(const char *funcname, const char *libname)
 
 	hpatch_function_addr = find_dl_func(libname, funcname);
 
+    printf("found patched function %lu in %s\n", hpatch_function_addr, libname);
+
 	replace_call(target->mcount, (unsigned long)hpatch_caller);
 }
 
@@ -253,12 +256,14 @@ int main(int argc, char *argv[])
 	libname = argv[2];
 
 	printf("== before patch ==\n");
-	hello(901);
+	ret = hello(901);
+    printf("hello ret: %d\n", ret);
 
 	do_hpatch(funcname, libname);
 
 	printf("== after patch ==\n");
-	hello(901);
+	ret = hello(901);
+    printf("hello ret: %d\n", ret);
 
 	return 0;
 }
