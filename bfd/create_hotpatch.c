@@ -7,6 +7,28 @@
 
 #include "list.h"
 
+enum loglevel {
+	DEBUG,
+	INFO,
+	ERR,
+};
+
+#define log_debug(format, ...) log(DEBUG, "DEBUG: "format"\n", ##__VA_ARGS__)
+#define log_info(format, ...)  log(INFO, "INFO: "format"\n", ##__VA_ARGS__)
+#define err_out(format, ...)                       \
+({                                                 \
+	log(ERR, "ERROR: "format"\n", ##__VA_ARGS__);  \
+	exit(1);                                       \
+})
+
+#define log(level, format, ...)        \
+({                                     \
+	if (loglevel <= (level))           \
+		printf(format, ##__VA_ARGS__); \
+})
+
+static enum loglevel loglevel = DEBUG;
+
 static asymbol **symtab;
 static arelent **relpp;
 
@@ -21,6 +43,7 @@ struct hp_symbol;
 struct hp_section {
 	struct list_node list;
 	struct hp_section *twin;
+	struct hp_symbol *secsym;
 	asection *raw_sec;
 	enum status status;
 	int include;
@@ -31,6 +54,7 @@ struct hp_section {
 struct hp_symbol {
 	struct list_node list;
 	struct hp_symbol *twin;
+	struct hp_section *symsec;
 	asymbol *raw_sym;
 	enum status status;
 	int include;
@@ -69,12 +93,28 @@ int is_group_section(struct hp_section *sec)
 	return (sec->raw_sec->flags & SEC_GROUP) ? 1 : 0;
 }
 
+int is_section_symbol(struct hp_symbol *sym)
+{
+	return (sym->raw_sym->flags & BSF_SECTION_SYM) ? 1 : 0;
+}
+
 struct hp_section *find_section_by_name(struct hp_bfd *hbfd, const char *name)
 {
 	struct hp_section *sec;
 
 	list_for_each_entry(sec, &hbfd->sections, list)
 		if (!strcmp(bfd_get_section_name(hbfd->raw_bfd, sec->raw_sec), name))
+			return sec;
+
+	return NULL;
+}
+
+struct hp_section *find_section_by_index(struct hp_bfd *hbfd, int index)
+{
+	struct hp_section *sec;
+
+	list_for_each_entry(sec, &hbfd->sections, list)
+		if (sec->raw_sec->index == index)
 			return sec;
 
 	return NULL;
@@ -113,12 +153,12 @@ void build_section_list(struct hp_bfd *hbfd)
 void build_symbol_list(struct hp_bfd *hbfd)
 {
 	struct hp_symbol *hp_sym;
+	struct hp_section *hp_sec;
 	long storage, symcount;
 
 	storage = bfd_get_symtab_upper_bound(hbfd->raw_bfd);
 	if (storage < 0) {
-		fprintf(stderr, "failed to get symtab upper bound\n");
-		exit(1);
+		err_out("failed to get symtab upper bound");
 	}
 
 	if (storage)
@@ -126,8 +166,7 @@ void build_symbol_list(struct hp_bfd *hbfd)
 
 	symcount = bfd_canonicalize_symtab(hbfd->raw_bfd, symtab);
 	if (symcount < 0) {
-		fprintf(stderr, "no symbols found\n");
-		exit(1);
+		err_out("no symbols found");
 	}
 
 	for (int i = 0; i < symcount; i++) {
@@ -137,6 +176,14 @@ void build_symbol_list(struct hp_bfd *hbfd)
 		hp_sym->status = SAME;
 		hp_sym->include = 0;
 		hp_sym->strip = 0;
+
+		if (is_section_symbol(hp_sym)) {
+			hp_sec = find_section_by_index(hbfd, hp_sym->raw_sym->section->index);
+			if (!hp_sec)
+				err_out("can't find section for symbol %s", bfd_asymbol_name(hp_sym->raw_sym));
+			hp_sym->symsec = hp_sec;
+			hp_sec->secsym = hp_sym;
+		}
 
 		list_add_tail(&hp_sym->list, &hbfd->symbols);
 	}
@@ -152,8 +199,7 @@ void build_rela_list(struct hp_bfd *hbfd)
 	list_for_each_entry(sec, &hbfd->sections, list) {
 		relsize = bfd_get_reloc_upper_bound(hbfd->raw_bfd, sec->raw_sec);
 		if (relsize < 0) {
-			fprintf(stderr, "get reloc size failed\n");
-			exit(1);
+			err_out("get reloc size failed");
 		}
 
 		if (relsize == 0)
@@ -162,8 +208,7 @@ void build_rela_list(struct hp_bfd *hbfd)
 		relpp = (arelent **)malloc(relsize);
 		relcount = bfd_canonicalize_reloc(hbfd->raw_bfd, sec->raw_sec, relpp, symtab);
 		if (relcount < 0) {
-			fprintf(stderr, "canonicalize reloc failed\n");
-			exit(1);
+			err_out("canonicalize reloc failed");
 		}
 
 		for (int i = 0; i < relcount; i++) {
@@ -176,8 +221,7 @@ void build_rela_list(struct hp_bfd *hbfd)
 				struct hp_symbol *sym = find_symbol_by_name(hbfd, symname);
 
 				if (!sym) {
-					fprintf(stderr, "no such symbol found\n");
-					exit(1);
+					err_out("no such symbol found");
 				}
 				rela->sym = sym;
 			}
@@ -185,10 +229,6 @@ void build_rela_list(struct hp_bfd *hbfd)
 			list_add_tail(&rela->list, &sec->relas);
 		}
 	}
-}
-
-void check_valid_elf(struct hp_bfd *obfd, struct hp_bfd *pbfd)
-{
 }
 
 void correlate_sections(struct hp_bfd *obfd, struct hp_bfd *pbfd)
@@ -334,9 +374,39 @@ int include_changed_functions(struct hp_bfd *pbfd)
 	return changed;
 }
 
-void process_special_sections(struct hp_bfd *pbfd)
+void migrate_included_elements(struct hp_bfd *pbfd, struct hp_bfd **out_bfd)
 {
-	
+	struct hp_section *sec;
+	struct hp_symbol *sym;
+	struct hp_bfd *hbfd;
+
+	hbfd = malloc(sizeof(*hbfd));
+	hbfd->raw_bfd = NULL;
+	INIT_LIST_HEAD(&hbfd->sections);
+	INIT_LIST_HEAD(&hbfd->symbols);
+
+	list_for_each_entry(sec, &pbfd->sections, list) {
+		if (!sec->include)
+			continue;
+		list_del(&sec->list);
+		list_add_tail(&sec->list, &hbfd->sections);
+
+		if (!is_reloc_section(sec) && sec->secsym && !sec->secsym->include)
+			sec->secsym = NULL;
+	}
+
+	list_for_each_entry(sym, &pbfd->symbols, list) {
+		if (!sym->include)
+			continue;
+		list_del(&sym->list);
+		list_add_tail(&sym->list, &hbfd->symbols);
+		sym->strip = 0;
+
+		if (sym->symsec && !sym->symsec->include)
+			sym->symsec = NULL;
+	}
+
+	*out_bfd = hbfd;
 }
 
 void dump_bfd(struct hp_bfd *hbfd)
@@ -351,14 +421,14 @@ void dump_bfd(struct hp_bfd *hbfd)
 		else
 			reloc_hint = "";
 
-		printf("section: %s %s ", bfd_get_section_name(hbfd->raw_bfd, sec->raw_sec), reloc_hint);
-		printf("secsym: %s\n", bfd_asymbol_name(sec->raw_sec->symbol));
+		log_info("section: %s %s", bfd_get_section_name(hbfd->raw_bfd, sec->raw_sec), reloc_hint);
+		log_info("secsym: %s", bfd_asymbol_name(sec->raw_sec->symbol));
 	}
 
 	printf("\n");
 
 	list_for_each_entry(sym, &hbfd->symbols, list) {
-		printf("symbol: %s\n", bfd_asymbol_name(sym->raw_sym));
+		log_info("symbol: %s", bfd_asymbol_name(sym->raw_sym));
 	}
 
 	printf("\n");
@@ -370,17 +440,17 @@ struct hp_bfd *load_bfd(const char *file)
 
 	abfd = bfd_openr(file, NULL);
 	if (!abfd) {
-		fprintf(stderr, "cannot open %s\n", file);
+		log_info("cannot open %s", file);
 		return NULL;
 	}
 
 	if (!bfd_check_format(abfd, bfd_object)) {
-		fprintf(stderr, "invalid format\n");
+		log_info("invalid format");
 		return NULL;
 	}
 
 	if (!(bfd_get_file_flags(abfd) & HAS_SYMS)) {
-		fprintf(stderr, "no symbols found\n");
+		log_info("no symbols found");
 		return NULL;
 	}
 
@@ -402,8 +472,7 @@ void usage(void)
 {
 	const char *usage = "./create_hotpatch <original_obj> <patched_obj> <running_exec> <out_obj>";
 
-	fprintf(stdout, "%s\n", usage);
-	exit(1);
+	err_out("%s", usage);
 }
 
 int main(int argc, char *argv[])
@@ -418,8 +487,6 @@ int main(int argc, char *argv[])
 	obfd = load_bfd(argv[1]);
 	pbfd = load_bfd(argv[2]);
 
-	check_valid_elf(obfd, pbfd);
-
 	correlate_bfds(obfd, pbfd);
 
 	compare_correlate_elements(pbfd);
@@ -430,17 +497,12 @@ int main(int argc, char *argv[])
 
 	int num_changed = include_changed_functions(pbfd);
 	if (!num_changed) {
-		fprintf(stderr, "No changed functions\n");
-		return 1;
+		err_out("No changed functions");
 	}
-
-	process_special_sections(pbfd);	
-/*
-	check_patchability(pbfd);
 
 	migrate_included_elements(pbfd, &out_bfd);
 
 	drop_bfd(pbfd);
-*/
+
 	return 0;
 }

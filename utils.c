@@ -12,6 +12,11 @@ void hdebug(const char *msg)
     fprintf(stdout, "%s\n", msg);
 }
 
+void newdebug(const char *msg)
+{
+    fprintf(stdout, "%s\n", msg);
+}
+
 const char *my_exe_path(void)
 {
 	static __thread char path[PATH_MAX];
