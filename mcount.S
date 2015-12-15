@@ -8,23 +8,25 @@
         .text; _ALIGN_TEXT; .globl x; .type x,@function; x:
 
 ENTRY(hpatch_caller)
-    push %rbp
-    movq %rsp, %rbp
-    subq $0x10, %rsp
-    movq %rdi, (%rsp)
+    subq $0x38, %rsp
+    movq %rax, (%rsp)
+    movq %rcx, 8(%rsp)
+    movq %rdx, 16(%rsp)
+    movq %rsi, 24(%rsp)
+    movq %rdi, 32(%rsp)
+    movq %r8, 40(%rsp)
+    movq %r9, 48(%rsp)
 
-	call find_hpatch_function
-    call *%rax
+    leaq 0x38(%rsp), %rdi
 
-    movq 8(%rbp), %rdi
-    movq %rax, 8(%rsp)
+    call hpatch_handler
 
-    call find_ret_addr
-    movq %rax, 8(%rbp)
-
-    movq 8(%rsp), %rax
-    movq (%rsp), %rdi
-    addq $0x10, %rsp
-
-    leaveq
+    movq 48(%rsp), %r9
+    movq 40(%rsp), %r8
+    movq 32(%rsp), %rdi
+    movq 24(%rsp), %rsi
+    movq 16(%rsp), %rdx
+    movq 8(%rsp), %rcx
+    movq (%rsp), %rax
+    addq $0x38, %rsp
     retq

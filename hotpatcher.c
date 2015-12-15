@@ -97,32 +97,6 @@ static unsigned long find_mcount_call(unsigned long entry_addr)
 	return 0;
 }
 
-unsigned long find_hpatch_function()
-{
-	unsigned long offset;
-
-	offset = hpatch_function_addr;
-
-	return offset;
-}
-
-unsigned long find_ret_addr(unsigned long entry_addr)
-{
-	unsigned long start = entry_addr;
-
-    union instruction *code;
-    unsigned long addr;
-
-    code = rawmemchr((void *)start, OPCODE_RET);
-    addr = (unsigned long)code;
-
-
-    if (code == NULL)
-        return entry_addr;
-
-    return addr;
-}
-
 static struct caller *lookup_caller(const char *name)
 {
 	const struct caller key = {
@@ -231,6 +205,11 @@ void do_hpatch(const char *funcname, const char *libname)
     printf("found patched function %lu in %s\n", hpatch_function_addr, libname);
 
 	replace_call(target->mcount, (unsigned long)hpatch_caller);
+}
+
+void hpatch_handler(unsigned long *ret_addr)
+{
+	*ret_addr = hpatch_function_addr;
 }
 
 static void usage()

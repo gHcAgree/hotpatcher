@@ -25,12 +25,11 @@ new:
 
 patch:
 	./gelf/create-diff-object sample_functions_pre.o sample_functions_new.o hotpatcher_new hpatch.o
-	#ld -r hpatch.o utils.o -o hpatch2.o -lc
 	gcc -shared hpatch.o utils.o -o hpatch.so -lc
 
 right:
 	gcc -shared sample_functions_new.o utils.o -o sample_functions_new.so
 
 clean:
-	rm -f hotpatcher *.o *.so
+	rm -f hotpatcher hotpatcher_new *.o *.so
 	-rm -f gmon.out
