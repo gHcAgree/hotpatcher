@@ -66,8 +66,11 @@ struct hp_symbol {
 	struct hp_section *symsec;
 	asymbol *raw_sym;
 	enum status status;
-	int include;
-	int strip;
+	union {
+		int include;
+		int strip;
+	};
+	int has_fentry;
 };
 
 struct hp_rela {
@@ -206,11 +209,16 @@ void build_symbol_list(struct hp_bfd *hbfd)
 		hp_sym->include = 0;
 		hp_sym->strip = 0;
 
-		if (is_section_symbol(hp_sym)) {
-			hp_sec = find_section_by_index(hbfd, hp_sym->raw_sym->section->index);
+		int index = hp_sym->raw_sym->section->index;
+		if (index > SHN_UNDEF && index < SHN_LORESERVE) {
+			hp_sec = find_section_by_index(hbfd, index);
 			if (!hp_sec)
-				err_out("can't find section for symbol %s", bfd_asymbol_name(hp_sym->raw_sym));
-			hp_sym->symsec = hp_sec;
+				err_out("can't find section for symbol %s",
+					bfd_asymbol_name(hp_sym->raw_sym));
+			hp_sym->sec = hp_sec;
+		}
+
+		if (is_section_symbol(hp_sym)) {
 			hp_sec->secsym = hp_sym;
 		}
 
@@ -228,6 +236,12 @@ void build_rela_list(struct hp_bfd *hbfd)
 	list_for_each_entry(sec, &hbfd->sections, list) {
 		if (!is_reloc_section(sec))
 			continue;
+
+		sec->base = find_symbol_by_name(hbfd, bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
+		if (!sec->base)
+			err_out("can't find base section for reloc section %s",
+				bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
+		sec->base->reloc = sec;
 
 		relsize = bfd_get_reloc_upper_bound(hbfd->raw_bfd, sec->raw_sec);
 		if (relsize < 0) {
