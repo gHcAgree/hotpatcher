@@ -1,4 +1,4 @@
-CFLAGS  += -Iinsn -Wall -g -Werror
+CFLAGS  += -Iinsn -Wall -g -Werror -std=gnu99
 LDFLAGS = -lelf
 
 TARGETS = create-diff-object

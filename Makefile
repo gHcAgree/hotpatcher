@@ -1,6 +1,6 @@
 .PHONY: orig clean new patch right
 
-CFLAGS = -g -ffunction-sections -fdata-sections -pg -mfentry
+CFLAGS = -g -ffunction-sections -fdata-sections -pg -mfentry -std=gnu99
 NCFLAGS = $(CFLAGS) -fPIC
 LDFLAGS = -lbfd -ldl -pg -mfentry
 
