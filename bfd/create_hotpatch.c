@@ -30,6 +30,8 @@ enum loglevel {
 
 static enum loglevel loglevel = DEBUG;
 
+static asymbol **symtab_exec;
+static long symcount_exec;
 static asymbol **symtab;
 static arelent **relpp;
 
@@ -378,6 +380,21 @@ void build_rela_list(struct hp_bfd *hbfd)
 	}
 }
 
+void find_fentry_calls(struct hp_bfd *hbfd)
+{
+	struct hp_symbol *sym;
+	struct hp_rela* rel;
+
+	list_for_each_entry(sym, &hbfd->symbols, list) {
+		if (!is_function_symbol(sym))
+			continue;
+		rel = list_first_entry(&sym->symsec->relas, struct hp_rela, list);
+		if (strcmp(bfd_asymbol_name(rel->relsym->raw_sym), "__fentry"))
+			continue;
+		sym->has_fentry = 1;
+	}
+}
+
 void correlate_sections(struct hp_bfd *obfd, struct hp_bfd *pbfd)
 {
 	struct hp_section *sec1, *sec2;
@@ -699,9 +716,45 @@ struct hp_bfd *load_bfd(const char *file)
 	build_symbol_list(hbfd);
 	build_rela_list(hbfd);
 
+	find_fentry_calls(hbfd);
+
 	dump_bfd(hbfd);
 
 	return hbfd;
+}
+
+void load_symtab_exec(const char *exec)
+{
+	bfd* abfd;
+	long storage;
+
+	abfd = bfd_openr(exec, NULL);
+	if (!abfd) {
+		log_info("cannot open %s", exec);
+		return;
+	}
+
+	if (!bfd_check_format(abfd, bfd_object)) {
+		log_info("invalid format");
+		return;
+	}
+
+	if (!(bfd_get_file_flags(abfd) & HAS_SYMS)) {
+		log_info("no symbols found");
+		return;
+	}
+
+	storage = bfd_get_symtab_upper_bound(abfd);
+	if (storage < 0) {
+		err_out("failed to get symtab upper bound");
+	}
+
+	if (storage)
+		symtab_exec = malloc(storage);
+
+	symcount_exec = bfd_canonicalize_symtab(abfd, symtab_exec);
+	if (symcount_exec < 0)
+		err_out("no symbols found");
 }
 
 void usage(void)
@@ -743,6 +796,8 @@ int main(int argc, char *argv[])
 	migrate_included_elements(pbfd, &out_bfd);
 
 	drop_bfd(pbfd);
+
+	load_symtab_exec(argv[3]);
 
 	return 0;
 }
