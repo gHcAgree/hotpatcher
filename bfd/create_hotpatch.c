@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stddef.h>
 #include <bfd.h>
+#include <elf.h>
 
 #include "list.h"
 
@@ -215,7 +216,7 @@ void build_symbol_list(struct hp_bfd *hbfd)
 			if (!hp_sec)
 				err_out("can't find section for symbol %s",
 					bfd_asymbol_name(hp_sym->raw_sym));
-			hp_sym->sec = hp_sec;
+			hp_sym->symsec = hp_sec;
 		}
 
 		if (is_section_symbol(hp_sym)) {
@@ -237,7 +238,7 @@ void build_rela_list(struct hp_bfd *hbfd)
 		if (!is_reloc_section(sec))
 			continue;
 
-		sec->base = find_symbol_by_name(hbfd, bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
+		sec->base = find_section_by_name(hbfd, bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
 		if (!sec->base)
 			err_out("can't find base section for reloc section %s",
 				bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
