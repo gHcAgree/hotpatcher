@@ -44,21 +44,15 @@ struct hp_symbol;
 struct hp_section {
 	struct list_node list;
 	struct hp_section *twin;
+	union {
+		struct hp_symbol *secsym;
+		struct hp_symbol *bundsym;         // see is_bundleable_symbol()
+	};
 	asection *raw_sec;
 	enum status status;
 	int include;
 	int ignore;
-	union {
-		/* reloc section contains reloc entries */
-		struct {
-			struct hp_section *base;
-			struct list_head relas;
-		};
-		struct {
-			struct hp_section *reloc;
-			struct hp_symbol *secsym;
-		};
-	};
+	struct list_head relas;
 };
 
 struct hp_symbol {
@@ -77,7 +71,7 @@ struct hp_symbol {
 struct hp_rela {
 	struct list_node list;
 	arelent *raw_rel;
-	struct hp_symbol *sym;
+	struct hp_symbol *relsym;
 };
 
 struct hp_bfd {
@@ -86,7 +80,7 @@ struct hp_bfd {
 	struct list_head symbols;
 };
 
-int is_reloc_section(struct hp_section *sec)
+int has_reloc_section(struct hp_section *sec)
 {
 	return (sec->raw_sec->flags & SEC_RELOC) ? 1 : 0; 
 }
@@ -106,14 +100,62 @@ int is_group_section(struct hp_section *sec)
 	return (sec->raw_sec->flags & SEC_GROUP) ? 1 : 0;
 }
 
+int is_empty_section(struct hp_section *sec)
+{
+	return (sec->raw_sec->flags & SEC_HAS_CONTENTS) ? 1 : 0;
+}
+
 int is_section_symbol(struct hp_symbol *sym)
 {
 	return (sym->raw_sym->flags & BSF_SECTION_SYM) ? 1 : 0;
 }
 
-int is_section_empty(struct hp_section *sec)
+int is_function_symbol(struct hp_symbol *sym)
 {
-	return (sec->raw_sec->flags & SEC_HAS_CONTENTS) ? 1 : 0;
+	return (sym->raw_sym->flags & BSF_FUNCTION) ? 1 : 0;
+}
+
+int is_dataobj_symbol(struct hp_symbol *sym)
+{
+	return (sym->raw_sym->flags & BSF_OBJECT) ? 1 : 0;
+}
+
+int is_file_symbol(struct hp_symbol *sym)
+{
+	return (sym->raw_sym->flags & BSF_FILE) ? 1 : 0;
+}
+
+int is_bundleable_symbol(struct hp_symbol *sym)
+{
+	const char *secname = bfd_section_name(NULL, sym->symsec->raw_sec);
+	const char *symname = bfd_asymbol_name(sym->raw_sym);
+
+	if (is_function_symbol(sym) &&
+	    !strncmp(secname, ".text.",6) &&
+	    !strcmp(secname + 6, symname))
+		return 1;
+
+	if (is_function_symbol(sym) &&
+	    !strncmp(secname, ".text.unlikely.",15) &&
+	    !strcmp(secname + 15, symname))
+		return 1;
+
+	if (is_dataobj_symbol(sym) &&
+	   !strncmp(secname, ".data.",6) &&
+	   !strcmp(secname + 6, symname))
+		return 1;
+
+	if (is_dataobj_symbol(sym) &&
+	   !strncmp(secname, ".rodata.",8) &&
+	   !strcmp(secname + 8, symname))
+		return 1;
+
+	if (is_dataobj_symbol(sym) &&
+	   !strncmp(secname, ".bss.",5) &&
+	   !strcmp(secname + 5, symname))
+		return 1;
+
+	return 0;
 }
 
 struct hp_section *find_section_by_name(struct hp_bfd *hbfd, const char *name)
@@ -160,8 +202,69 @@ int rela_equal(struct hp_rela *rela1, struct hp_rela *rela2)
 	if (rela1->raw_rel->addend != rela2->raw_rel->addend)
 		return 0;
 
-	return !strcmp(bfd_asymbol_name(rela1->sym->raw_sym),
-				   bfd_asymbol_name(rela2->sym->raw_sym));
+	return !strcmp(bfd_asymbol_name(rela1->relsym->raw_sym),
+				   bfd_asymbol_name(rela2->relsym->raw_sym));
+}
+
+void dump_rela(struct hp_rela *rel)
+{
+	log_debug("    rela: offset %lu, addend %d, symbol %s",
+						(unsigned long)rel->raw_rel->address,
+						(int)rel->raw_rel->addend,
+						bfd_asymbol_name(rel->relsym->raw_sym));
+}
+
+void dump_section(struct hp_section *sec)
+{
+	if (has_reloc_section(sec)) {
+		struct hp_rela *rel;
+
+		log_debug("section: %s [reloc]", bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
+
+		list_for_each_entry(rel, &sec->relas, list)
+			dump_rela(rel);
+	} else {
+		log_debug("section: %s", bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
+	}
+}
+
+void dump_symbol(struct hp_symbol *sym)
+{
+	log_debug("symbol: %s", bfd_asymbol_name(sym->raw_sym));
+}
+
+void dump_bfd(struct hp_bfd *hbfd)
+{
+	struct hp_section *sec;
+	struct hp_symbol *sym;
+
+	log_debug("===================== sections =====================");
+
+	list_for_each_entry(sec, &hbfd->sections, list)
+		dump_section(sec);
+
+	printf("\n");
+
+	log_debug("===================== symbols =====================");
+
+	list_for_each_entry(sym, &hbfd->symbols, list)
+		dump_symbol(sym);
+
+	printf("\n");
+}
+
+void dump_changes(struct hp_bfd *hbfd)
+{
+	struct hp_symbol *sym;
+
+	list_for_each_entry(sym, &hbfd->symbols, list) {
+		if (!sym->include || !sym->symsec || !is_function_symbol(sym))
+			continue;
+		if (sym->status == NEW)
+			log_info("new function: %s", bfd_asymbol_name(sym->raw_sym));
+		if (sym->status == CHANGED)
+			log_info("changed function: %s", bfd_asymbol_name(sym->raw_sym));
+	}
 }
 
 void build_section_list(struct hp_bfd *hbfd)
@@ -173,6 +276,7 @@ void build_section_list(struct hp_bfd *hbfd)
 		hp_sec = malloc(sizeof(*hp_sec));
 		INIT_LIST_NODE(&hp_sec->list);
 		hp_sec->twin = NULL;
+		hp_sec->secsym = NULL;
 		hp_sec->raw_sec = asec;
 		hp_sec->status = SAME;
 		hp_sec->include = 0;
@@ -205,6 +309,7 @@ void build_symbol_list(struct hp_bfd *hbfd)
 	for (int i = 0; i < symcount; i++) {
 		hp_sym = malloc(sizeof(*hp_sym));
 		hp_sym->twin = NULL;
+		hp_sym->symsec = NULL;
 		hp_sym->raw_sym = symtab[i];
 		hp_sym->status = SAME;
 		hp_sym->include = 0;
@@ -217,10 +322,12 @@ void build_symbol_list(struct hp_bfd *hbfd)
 				err_out("can't find section for symbol %s",
 					bfd_asymbol_name(hp_sym->raw_sym));
 			hp_sym->symsec = hp_sec;
-		}
 
-		if (is_section_symbol(hp_sym)) {
-			hp_sec->secsym = hp_sym;
+			if (is_bundleable_symbol(hp_sym)) {
+				hp_sec->bundsym = hp_sym;
+			} else if (is_section_symbol(hp_sym)) {
+				hp_sec->secsym = hp_sym;
+			}
 		}
 
 		list_add_tail(&hp_sym->list, &hbfd->symbols);
@@ -235,14 +342,8 @@ void build_rela_list(struct hp_bfd *hbfd)
 	struct hp_section *sec;
 
 	list_for_each_entry(sec, &hbfd->sections, list) {
-		if (!is_reloc_section(sec))
+		if (!has_reloc_section(sec))
 			continue;
-
-		sec->base = find_section_by_name(hbfd, bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
-		if (!sec->base)
-			err_out("can't find base section for reloc section %s",
-				bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
-		sec->base->reloc = sec;
 
 		relsize = bfd_get_reloc_upper_bound(hbfd->raw_bfd, sec->raw_sec);
 		if (relsize < 0) {
@@ -267,10 +368,9 @@ void build_rela_list(struct hp_bfd *hbfd)
 				const char *symname = (*(relpp[i]->sym_ptr_ptr))->name;
 				struct hp_symbol *sym = find_symbol_by_name(hbfd, symname);
 
-				if (!sym) {
+				if (!sym)
 					err_out("no such symbol found");
-				}
-				rela->sym = sym;
+				rela->relsym = sym;
 			}
 
 			list_add_tail(&rela->list, &sec->relas);
@@ -314,58 +414,10 @@ void correlate_symbols(struct hp_bfd *obfd, struct hp_bfd *pbfd)
 	}
 }
 
-void compare_correlated_reloc_section(struct hp_section *sec)
-{
-	struct hp_rela *rela1, *rela2;
-
-	rela2 = list_first_entry(&sec->twin->relas, struct hp_rela, list);
-	list_for_each_entry(rela1, &sec->relas, list) {
-		if (rela_equal(rela1, rela2)) {
-			rela2 = list_entry(rela2->list.next, struct hp_rela, list);
-			continue;
-		}
-		sec->status = CHANGED;
-		return;
-	}
-
-	sec->status = SAME;
-}
-
-void compare_correlated_nonreloc_section(struct hp_section *sec)
-{
-	struct hp_section *sec1 = sec, *sec2 = sec->twin;
-
-	if (!is_section_empty(sec1)) {
-		unsigned long size1, size2;
-		
-		size1 = bfd_section_size(NULL, sec1->raw_sec);
-		size2 = bfd_section_size(NULL, sec2->raw_sec);
-
-		if (size1 != size2) {
-			sec->status = CHANGED;
-			return;
-		}
-
-		unsigned char *data1, *data2;
-
-		bfd_get_full_section_contents(sec1->raw_sec->owner, sec1->raw_sec, &data1);
-		bfd_get_full_section_contents(sec2->raw_sec->owner, sec2->raw_sec, &data2);
-
-		if (memcmp(data1, data2, size1)) {
-			sec->status = CHANGED;
-			return;
-		}
-	} else if (!is_section_empty(sec2)) {
-		sec->status = CHANGED;
-		return;
-	}
-
-	sec->status = SAME;
-}
-
 void compare_correlated_section(struct hp_section *sec)
 {
 	struct hp_section *sec1 = sec, *sec2 = sec->twin;
+	struct hp_rela *rela1, *rela2;
 
 	if (bfd_section_size(NULL, sec1->raw_sec)
 		!= bfd_section_size(NULL, sec2->raw_sec)) {
@@ -373,11 +425,30 @@ void compare_correlated_section(struct hp_section *sec)
 		goto out;
 	}
 
-	if (is_reloc_section(sec1))
-		compare_correlated_reloc_section(sec1);
-	else
-		compare_correlated_nonreloc_section(sec1);
+	if (!is_empty_section(sec1)) {
+		unsigned char *data1, *data2;
 
+		bfd_get_full_section_contents(sec1->raw_sec->owner, sec1->raw_sec, &data1);
+		bfd_get_full_section_contents(sec2->raw_sec->owner, sec2->raw_sec, &data2);
+
+		if (memcmp(data1, data2, bfd_section_size(NULL, sec1->raw_sec))) {
+			sec->status = CHANGED;
+			goto out;
+		}
+	}
+
+	/* compare reles */
+	rela2 = list_first_entry(&sec2->relas, struct hp_rela, list);
+	list_for_each_entry(rela1, &sec1->relas, list) {
+		if (rela_equal(rela1, rela2)) {
+			rela2 = list_entry(rela2->list.next, struct hp_rela, list);
+			continue;
+		}
+		sec1->status = CHANGED;
+		goto out;
+	}
+
+	sec1->status = SAME;
 out:
 	if (sec1->status == CHANGED)
 		log_info("section %s changed", bfd_section_name(NULL, sec1->raw_sec));
@@ -392,7 +463,8 @@ void compare_correlated_symbol(struct hp_symbol *sym)
 		if (sym2->symsec->twin && sym2->symsec->twin->ignore)
 			sym1->status = CHANGED;
 		else
-			err_out("symbol changed section: %s", bfd_asymbol_name(sym1->raw_sym));
+			err_out("symbol changed section: %s",
+					bfd_asymbol_name(sym1->raw_sym));
 	}
 
 	if (sym1->symsec && (bfd_is_abs_section(sym1->raw_sym->section)
@@ -412,6 +484,12 @@ void compare_sections(struct hp_bfd *pbfd)
 			sec->status = NEW;
 		else
 			compare_correlated_section(sec);
+
+		/* sync symbol status*/
+		if (sec->secsym && sec->secsym->status != CHANGED)
+			sec->secsym->status = sec->status;
+		if (sec->bundsym && sec->bundsym->status != CHANGED)
+			sec->bundsym->status = sec->status;
 	}
 }
 
@@ -475,14 +553,39 @@ void include_std_elements(struct hp_bfd *pbfd)
 		char *name = bfd_section_name(pbfd->raw_bfd, sec->raw_sec);
 		if (!strcmp(name, ".symtab") ||
 			!strcmp(name, ".strtab") ||
-			!strcmp(name, ".shstrtab"))
+			!strcmp(name, ".shstrtab")) {
 			sec->include = 1;
+
+			log_debug("include section %s",
+				bfd_section_name(pbfd->raw_bfd, sec->raw_sec));
+
+			if (sec->secsym) {
+				sec->secsym->include = 1;
+				log_debug("include symbol %s",
+					bfd_asymbol_name(sec->secsym->raw_sym));
+			}
+		}
 	}
 }
 
-void include_symbol(struct hp_symbol *sym)
+void include_necessary_symbol(struct hp_symbol *sym)
 {
+	struct hp_section *sec;
+	struct hp_rela *rel;
+
 	sym->include = 1;
+	log_debug("include symbol: %s", bfd_asymbol_name(sym->raw_sym));
+
+	if (!sym->symsec || sym->symsec->include
+					 || (is_section_symbol(sym) && sym->status == SAME))
+		return;
+
+	sec = sym->symsec;
+	sec->include = 1;
+	log_debug("include section: %s", bfd_section_name(NULL, sec->raw_sec));
+
+	list_for_each_entry(rel, &sec->relas, list)
+		include_necessary_symbol(rel->relsym);
 }
 
 int include_changed_functions(struct hp_bfd *pbfd)
@@ -493,11 +596,35 @@ int include_changed_functions(struct hp_bfd *pbfd)
 	list_for_each_entry(sym, &pbfd->symbols, list) {
 		if (sym->status == CHANGED) {
 			changed++;
-			include_symbol(sym);
+			include_necessary_symbol(sym);
+		}
+
+		if (is_file_symbol(sym)) {
+			sym->include = 1;
+			log_debug("include symbol: %s", bfd_asymbol_name(sym->raw_sym));
 		}
 	}
 
 	return changed;
+}
+
+void include_debug_sections(struct hp_bfd *pbfd)
+{
+	struct hp_section *sec;
+
+	list_for_each_entry(sec, &pbfd->sections, list) {
+		if (is_debug_section(sec)) {
+			sec->include = 1;
+			log_debug("include debug section: %s",
+					  bfd_section_name(pbfd->raw_bfd, sec->raw_sec));
+
+			if (sec->secsym) {
+				sec->secsym->include = 1;
+				log_debug("include debug symbol: %s",
+						  bfd_asymbol_name(sec->secsym->raw_sym));
+			}
+		}
+	}
 }
 
 void migrate_included_elements(struct hp_bfd *pbfd, struct hp_bfd **out_bfd)
@@ -514,16 +641,24 @@ void migrate_included_elements(struct hp_bfd *pbfd, struct hp_bfd **out_bfd)
 	list_for_each_entry(sec, &pbfd->sections, list) {
 		if (!sec->include)
 			continue;
+
+		log_debug("migrate section: %s",
+				  bfd_section_name(hbfd->raw_bfd, sec->raw_sec));
+
 		list_del(&sec->list);
 		list_add_tail(&sec->list, &hbfd->sections);
 
-		if (!is_reloc_section(sec) && sec->secsym && !sec->secsym->include)
+		if (sec->secsym && !sec->secsym->include)
 			sec->secsym = NULL;
 	}
 
 	list_for_each_entry(sym, &pbfd->symbols, list) {
 		if (!sym->include)
 			continue;
+
+		log_debug("migrate symbol: %s",
+				  bfd_asymbol_name(sym->raw_sym));
+
 		list_del(&sym->list);
 		list_add_tail(&sym->list, &hbfd->symbols);
 		sym->strip = 0;
@@ -533,31 +668,6 @@ void migrate_included_elements(struct hp_bfd *pbfd, struct hp_bfd **out_bfd)
 	}
 
 	*out_bfd = hbfd;
-}
-
-void dump_bfd(struct hp_bfd *hbfd)
-{
-	struct hp_section *sec;
-	struct hp_symbol *sym;
-
-	list_for_each_entry(sec, &hbfd->sections, list) {
-		char *reloc_hint;
-		if (is_reloc_section(sec))
-			reloc_hint = "[reloc]";
-		else
-			reloc_hint = "";
-
-		log_info("section: %s %s", bfd_section_name(hbfd->raw_bfd, sec->raw_sec), reloc_hint);
-		log_info("secsym: %s", bfd_asymbol_name(sec->raw_sec->symbol));
-	}
-
-	printf("\n");
-
-	list_for_each_entry(sym, &hbfd->symbols, list) {
-		log_info("symbol: %s", bfd_asymbol_name(sym->raw_sym));
-	}
-
-	printf("\n");
 }
 
 struct hp_bfd *load_bfd(const char *file)
@@ -622,9 +732,13 @@ int main(int argc, char *argv[])
 	include_std_elements(pbfd);
 
 	int num_changed = include_changed_functions(pbfd);
-	if (!num_changed) {
-		err_out("No changed functions");
-	}
+	if (!num_changed)
+	 	err_out("No changed functions");
+
+	include_debug_sections(pbfd);
+
+	dump_bfd(pbfd);
+	dump_changes(pbfd);
 
 	migrate_included_elements(pbfd, &out_bfd);
 

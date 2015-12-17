@@ -1,4 +1,4 @@
-CFLAGS  += -g -Wall -Werror
+CFLAGS  += -g -Wall
 LDFLAGS = -lbfd
 
 SOURCES = create_hotpatch.c
