@@ -3137,7 +3137,7 @@ int main(int argc, char *argv[])
 	struct kpatch_elf *kelf_base, *kelf_patched, *kelf_out;
 	struct arguments arguments;
 	int num_changed, hooks_exist, new_globals_exist;
-	struct lookup_table *lookup;
+//	struct lookup_table *lookup;
 	struct section *sec, *symtab;
 	struct symbol *sym;
 	char *hint = NULL, *name, *pos;
@@ -3223,7 +3223,7 @@ int main(int argc, char *argv[])
 		ERROR("FILE symbol not found in output. Stripped?\n");
 
 	/* create symbol lookup table */
-	lookup = lookup_open(arguments.args[2]);
+//	lookup = lookup_open(arguments.args[2]);
 
 	/* extract module name (destructive to arguments.modulefile) */
 	name = basename(arguments.args[2]);
@@ -3243,11 +3243,11 @@ int main(int argc, char *argv[])
 	printf("module name = %s\n", name);
 
 	/* create strings, patches, and dynrelas sections */
-	kpatch_create_strings_elements(kelf_out);
-	kpatch_create_patches_sections(kelf_out, lookup, hint, name);
+//	kpatch_create_strings_elements(kelf_out);
+//	kpatch_create_patches_sections(kelf_out, lookup, hint, name);
 //	kpatch_create_dynamic_rela_sections(kelf_out, lookup, hint, name);
-	kpatch_create_hooks_objname_rela(kelf_out, name);
-	kpatch_build_strings_section_data(kelf_out);
+//	kpatch_create_hooks_objname_rela(kelf_out, name);
+//	kpatch_build_strings_section_data(kelf_out);
 
 //	kpatch_create_mcount_sections(kelf_out);
 

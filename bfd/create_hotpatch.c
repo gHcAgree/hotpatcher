@@ -30,8 +30,8 @@ enum loglevel {
 
 static enum loglevel loglevel = DEBUG;
 
-static asymbol **symtab_exec;
-static long symcount_exec;
+// static asymbol **symtab_exec;
+// static long symcount_exec;
 static asymbol **symtab;
 static arelent **relpp;
 
@@ -723,38 +723,49 @@ struct hp_bfd *load_bfd(const char *file)
 	return hbfd;
 }
 
-void load_symtab_exec(const char *exec)
+// void load_symtab_exec(const char *exec)
+// {
+// 	bfd* abfd;
+// 	long storage;
+
+// 	abfd = bfd_openr(exec, NULL);
+// 	if (!abfd) {
+// 		log_info("cannot open %s", exec);
+// 		return;
+// 	}
+
+// 	if (!bfd_check_format(abfd, bfd_object)) {
+// 		log_info("invalid format");
+// 		return;
+// 	}
+
+// 	if (!(bfd_get_file_flags(abfd) & HAS_SYMS)) {
+// 		log_info("no symbols found");
+// 		return;
+// 	}
+
+// 	storage = bfd_get_symtab_upper_bound(abfd);
+// 	if (storage < 0) {
+// 		err_out("failed to get symtab upper bound");
+// 	}
+
+// 	if (storage)
+// 		symtab_exec = malloc(storage);
+
+// 	symcount_exec = bfd_canonicalize_symtab(abfd, symtab_exec);
+// 	if (symcount_exec < 0)
+// 		err_out("no symbols found");
+// }
+
+char *name_patch(const char *exec_name)
 {
-	bfd* abfd;
-	long storage;
+	char *patch_name;
 
-	abfd = bfd_openr(exec, NULL);
-	if (!abfd) {
-		log_info("cannot open %s", exec);
-		return;
-	}
+	patch_name = malloc(strlen(exec_name) + 7);
+	sprintf(patch_name, "%s%s", exec_name, "_patch");
+	patch_name[strlen(patch_name)] = '\0';
 
-	if (!bfd_check_format(abfd, bfd_object)) {
-		log_info("invalid format");
-		return;
-	}
-
-	if (!(bfd_get_file_flags(abfd) & HAS_SYMS)) {
-		log_info("no symbols found");
-		return;
-	}
-
-	storage = bfd_get_symtab_upper_bound(abfd);
-	if (storage < 0) {
-		err_out("failed to get symtab upper bound");
-	}
-
-	if (storage)
-		symtab_exec = malloc(storage);
-
-	symcount_exec = bfd_canonicalize_symtab(abfd, symtab_exec);
-	if (symcount_exec < 0)
-		err_out("no symbols found");
+	return patch_name;
 }
 
 void usage(void)
@@ -767,6 +778,7 @@ void usage(void)
 int main(int argc, char *argv[])
 {
 	struct hp_bfd *obfd, *pbfd, *out_bfd;
+	char *patch_name;
 
 	if (argc != 5)
 		usage();
@@ -797,7 +809,22 @@ int main(int argc, char *argv[])
 
 	drop_bfd(pbfd);
 
-	load_symtab_exec(argv[3]);
+//	load_symtab_exec(argv[3]);
+
+	patch_name = name_patch(argv[3]);
+
+	log_info("patch_name: %s", patch_name);
+
+	// reorder_symbols(out_bfd);
+	// reindex_elements(out_bfd);
+	// rebuild_relas(out_bfd);
+	// create_shstrtab(out_bfd);
+	// create_strtab(out_bfd);
+	// create_symtab(out_bfd);
+
+	// dump_bfd(out_bfd);
+
+	// write_bfd(out_bfd, argv[4]);
 
 	return 0;
 }
